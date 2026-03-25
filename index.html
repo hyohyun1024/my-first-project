@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>영업 실적 대시보드</title>
+  <script src="chart.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0f1117;
+      color: #e2e8f0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 32px 24px;
+    }
+
+    header {
+      margin-bottom: 32px;
+    }
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.5px;
+    }
+    header p {
+      margin-top: 4px;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    /* 요약 카드 */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .card {
+      background: #1e2130;
+      border: 1px solid #2d3148;
+      border-radius: 14px;
+      padding: 24px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .card.blue::before  { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .card.green::before { background: linear-gradient(90deg, #10b981, #34d399); }
+    .card.amber::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+    .card-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+    .card-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f8fafc;
+      line-height: 1;
+    }
+    .card-value span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #94a3b8;
+      margin-left: 4px;
+    }
+    .card-sub {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    /* 차트 패널 */
+    .panel {
+      background: #1e2130;
+      border: 1px solid #2d3148;
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      border-radius: 2px;
+    }
+    .panel:nth-of-type(1) .panel-title::before { background: #3b82f6; }
+    .panel:nth-of-type(2) .panel-title::before { background: #10b981; }
+
+    .chart-wrap {
+      position: relative;
+      height: 300px;
+    }
+
+    @media (max-width: 640px) {
+      .cards { grid-template-columns: 1fr; }
+      .card-value { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>영업 실적 대시보드</h1>
+    <p>2024년 영업팀 월별 목표 vs 실적 현황</p>
+  </header>
+
+  <!-- 요약 카드 -->
+  <div class="cards">
+    <div class="card blue">
+      <div class="card-label">연간 총 목표</div>
+      <div class="card-value" id="totalGoal">— <span>만원</span></div>
+      <div class="card-sub">12개월 누적 목표</div>
+    </div>
+    <div class="card green">
+      <div class="card-label">연간 총 실적</div>
+      <div class="card-value" id="totalResult">— <span>만원</span></div>
+      <div class="card-sub">12개월 누적 실적</div>
+    </div>
+    <div class="card amber">
+      <div class="card-label">연간 달성률</div>
+      <div class="card-value" id="totalRate">— <span>%</span></div>
+      <div class="card-sub">총 실적 / 총 목표</div>
+    </div>
+  </div>
+
+  <!-- 막대 그래프 -->
+  <div class="panel">
+    <div class="panel-title">월별 목표 vs 실적 (단위: 만원)</div>
+    <div class="chart-wrap">
+      <canvas id="barChart"></canvas>
+    </div>
+  </div>
+
+  <!-- 꺾은선 그래프 -->
+  <div class="panel">
+    <div class="panel-title">월별 달성률 추이 (%)</div>
+    <div class="chart-wrap">
+      <canvas id="lineChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      labels: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+      goal:   [5000, 5000, 5500, 5500, 6000, 6000, 6500, 6500, 7000, 7000, 7500, 8000],
+      result: [4200, 5800, 6100, 4900, 6300, 7100, 6200, 5900, 7800, 8200, 7100, 9300],
+    };
+
+    const rate = data.goal.map((g, i) => +((data.result[i] / g) * 100).toFixed(1));
+    const totalGoal   = data.goal.reduce((a, b) => a + b, 0);
+    const totalResult = data.result.reduce((a, b) => a + b, 0);
+    const totalRate   = ((totalResult / totalGoal) * 100).toFixed(1);
+
+    document.getElementById('totalGoal').innerHTML   = `${totalGoal.toLocaleString()} <span>만원</span>`;
+    document.getElementById('totalResult').innerHTML = `${totalResult.toLocaleString()} <span>만원</span>`;
+    document.getElementById('totalRate').innerHTML   = `${totalRate} <span>%</span>`;
+
+    const gridColor   = '#2d3148';
+    const tickColor   = '#64748b';
+    const tooltipBg   = '#1e2130';
+    const tooltipBorder = '#3b82f6';
+
+    const commonScales = {
+      x: {
+        ticks: { color: tickColor, font: { size: 12 } },
+        grid:  { color: gridColor },
+        border: { color: gridColor },
+      },
+      y: {
+        ticks: { color: tickColor, font: { size: 12 } },
+        grid:  { color: gridColor },
+        border: { color: gridColor },
+      },
+    };
+
+    const commonTooltip = {
+      backgroundColor: tooltipBg,
+      borderColor: tooltipBorder,
+      borderWidth: 1,
+      titleColor: '#f8fafc',
+      bodyColor: '#94a3b8',
+      padding: 12,
+      cornerRadius: 8,
+    };
+
+    // 막대 그래프
+    new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [
+          {
+            label: '목표',
+            data: data.goal,
+            backgroundColor: 'rgba(59,130,246,0.55)',
+            borderColor: '#3b82f6',
+            borderWidth: 1.5,
+            borderRadius: 5,
+            borderSkipped: false,
+          },
+          {
+            label: '실적',
+            data: data.result,
+            backgroundColor: 'rgba(16,185,129,0.55)',
+            borderColor: '#10b981',
+            borderWidth: 1.5,
+            borderRadius: 5,
+            borderSkipped: false,
+          },
+        ],
+      },
+      options: {
+        animation: false,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: { color: '#94a3b8', boxRadius: 4, font: { size: 12 } },
+          },
+          tooltip: {
+            ...commonTooltip,
+            callbacks: {
+              label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} 만원`,
+            },
+          },
+        },
+        scales: {
+          ...commonScales,
+          y: {
+            ...commonScales.y,
+            ticks: {
+              ...commonScales.y.ticks,
+              callback: v => v.toLocaleString(),
+            },
+          },
+        },
+      },
+    });
+
+    // 꺾은선 그래프
+    new Chart(document.getElementById('lineChart'), {
+      type: 'line',
+      data: {
+        labels: data.labels,
+        datasets: [
+          {
+            label: '달성률',
+            data: rate,
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245,158,11,0.12)',
+            pointBackgroundColor: rate.map(r => r >= 100 ? '#10b981' : '#f59e0b'),
+            pointBorderColor:     rate.map(r => r >= 100 ? '#10b981' : '#f59e0b'),
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            borderWidth: 2.5,
+            fill: true,
+            tension: 0.35,
+          },
+          {
+            label: '목표선 (100%)',
+            data: Array(12).fill(100),
+            borderColor: '#475569',
+            borderDash: [6, 4],
+            borderWidth: 1.5,
+            pointRadius: 0,
+            fill: false,
+          },
+        ],
+      },
+      options: {
+        animation: false,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: { color: '#94a3b8', boxRadius: 4, font: { size: 12 } },
+          },
+          tooltip: {
+            ...commonTooltip,
+            callbacks: {
+              label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%`,
+            },
+          },
+        },
+        scales: {
+          ...commonScales,
+          y: {
+            ...commonScales.y,
+            min: 70,
+            ticks: {
+              ...commonScales.y.ticks,
+              callback: v => v + '%',
+            },
+          },
+        },
+      },
+    });
+  </script>
+</body>
+</html>
