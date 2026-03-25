@@ -9,159 +9,337 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #0f1117;
-      color: #e2e8f0;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      font-family: 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
       min-height: 100vh;
-      padding: 32px 24px;
     }
 
-    header {
-      margin-bottom: 32px;
-    }
-    header h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #f8fafc;
-      letter-spacing: -0.5px;
-    }
-    header p {
-      margin-top: 4px;
-      font-size: 0.875rem;
-      color: #64748b;
-    }
-
-    /* 요약 카드 */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-    .card {
-      background: #1e2130;
-      border: 1px solid #2d3148;
-      border-radius: 14px;
-      padding: 24px 28px;
-      position: relative;
-      overflow: hidden;
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      border-radius: 14px 14px 0 0;
-    }
-    .card.blue::before  { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-    .card.green::before { background: linear-gradient(90deg, #10b981, #34d399); }
-    .card.amber::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-
-    .card-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #64748b;
-      margin-bottom: 10px;
-    }
-    .card-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #f8fafc;
-      line-height: 1;
-    }
-    .card-value span {
-      font-size: 1rem;
-      font-weight: 400;
-      color: #94a3b8;
-      margin-left: 4px;
-    }
-    .card-sub {
-      margin-top: 8px;
-      font-size: 0.8rem;
-      color: #64748b;
-    }
-
-    /* 차트 패널 */
-    .panel {
-      background: #1e2130;
-      border: 1px solid #2d3148;
-      border-radius: 14px;
-      padding: 28px;
-      margin-bottom: 20px;
-    }
-    .panel-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #cbd5e1;
-      margin-bottom: 20px;
+    /* ── 상단 네비게이션 ── */
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      padding: 0 32px;
+      height: 48px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .panel-title::before {
-      content: '';
-      display: inline-block;
-      width: 4px;
-      height: 16px;
-      border-radius: 2px;
+    .topbar-logo {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #f4501e;
+      letter-spacing: -0.5px;
     }
-    .panel:nth-of-type(1) .panel-title::before { background: #3b82f6; }
-    .panel:nth-of-type(2) .panel-title::before { background: #10b981; }
+    .topbar-sub {
+      font-size: 0.78rem;
+      color: #999;
+      margin-left: 4px;
+    }
+
+    /* ── 헤더 ── */
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      padding: 20px 32px 0;
+    }
+    .header-inner {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .header-logo {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #f4501e;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .header-title-block h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1.2;
+    }
+    .header-title-block p {
+      font-size: 0.75rem;
+      color: #aaa;
+      margin-top: 2px;
+    }
+
+    /* ── 탭 ── */
+    .tabs {
+      display: flex;
+      gap: 0;
+    }
+    .tab {
+      padding: 10px 22px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #888;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab.active {
+      color: #1a1a1a;
+      font-weight: 700;
+      border-bottom: 2px solid #f4501e;
+    }
+
+    /* ── 본문 ── */
+    .main {
+      padding: 24px 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* 기준일 */
+    .date-label {
+      text-align: right;
+      font-size: 0.75rem;
+      color: #aaa;
+      margin-bottom: 16px;
+    }
+
+    /* ── KPI 카드 ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: #fff;
+      border: 1px solid #ebebeb;
+      border-radius: 8px;
+      padding: 20px 24px;
+    }
+    .kpi-label {
+      font-size: 0.75rem;
+      color: #888;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      color: #1a1a1a;
+    }
+    .kpi-value.orange { color: #f4501e; }
+    .kpi-value span {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #888;
+      margin-left: 3px;
+    }
+    .kpi-sub {
+      margin-top: 8px;
+      font-size: 0.72rem;
+      color: #bbb;
+    }
+
+    /* ── 섹션 ── */
+    .section {
+      background: #fff;
+      border: 1px solid #ebebeb;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 15px;
+      background: #f4501e;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    .section-badge {
+      font-size: 0.72rem;
+      color: #f4501e;
+      background: #fff3f0;
+      border: 1px solid #ffd5cb;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-weight: 600;
+    }
 
     .chart-wrap {
       position: relative;
-      height: 300px;
+      height: 280px;
     }
 
+    /* ── 하단 달성률 테이블 ── */
+    .rate-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .rate-table th, .rate-table td {
+      padding: 10px 16px;
+      text-align: left;
+      font-size: 0.8rem;
+    }
+    .rate-table th {
+      color: #888;
+      font-weight: 600;
+      border-bottom: 1px solid #ebebeb;
+      background: #fafafa;
+    }
+    .rate-table td {
+      color: #1a1a1a;
+      border-bottom: 1px solid #f3f3f3;
+    }
+    .rate-table tr:last-child td { border-bottom: none; }
+    .rate-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .rate-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: #f0f0f0;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .rate-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: #f4501e;
+    }
+    .rate-bar-fill.under { background: #ffbdad; }
+    .rate-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      width: 48px;
+      text-align: right;
+    }
+    .rate-num.orange { color: #f4501e; }
+    .rate-num.gray   { color: #bbb; }
+
+    /* ── 푸터 ── */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.72rem;
+      color: #ccc;
+    }
+    .footer span { color: #f4501e; font-weight: 700; }
+
     @media (max-width: 640px) {
-      .cards { grid-template-columns: 1fr; }
-      .card-value { font-size: 1.6rem; }
+      .main { padding: 16px; }
+      .kpi-grid { grid-template-columns: 1fr; }
+      .kpi-value { font-size: 1.6rem; }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>영업 실적 대시보드</h1>
-    <p>2024년 영업팀 월별 목표 vs 실적 현황</p>
-  </header>
+  <!-- 상단 네비게이션 -->
+  <div class="topbar">
+    <span class="topbar-logo">영업팀</span>
+    <span class="topbar-sub">Sales Dashboard</span>
+  </div>
 
-  <!-- 요약 카드 -->
-  <div class="cards">
-    <div class="card blue">
-      <div class="card-label">연간 총 목표</div>
-      <div class="card-value" id="totalGoal">— <span>만원</span></div>
-      <div class="card-sub">12개월 누적 목표</div>
+  <!-- 헤더 -->
+  <div class="header">
+    <div class="header-inner">
+      <div class="header-logo">SALES</div>
+      <div class="header-title-block">
+        <h1>영업 실적 대시보드</h1>
+        <p>주식회사 Business Intelligence</p>
+      </div>
     </div>
-    <div class="card green">
-      <div class="card-label">연간 총 실적</div>
-      <div class="card-value" id="totalResult">— <span>만원</span></div>
-      <div class="card-sub">12개월 누적 실적</div>
-    </div>
-    <div class="card amber">
-      <div class="card-label">연간 달성률</div>
-      <div class="card-value" id="totalRate">— <span>%</span></div>
-      <div class="card-sub">총 실적 / 총 목표</div>
+    <div class="tabs">
+      <div class="tab active">Overview</div>
+      <div class="tab">월별 상세</div>
+      <div class="tab">분기 분석</div>
     </div>
   </div>
 
-  <!-- 막대 그래프 -->
-  <div class="panel">
-    <div class="panel-title">월별 목표 vs 실적 (단위: 만원)</div>
-    <div class="chart-wrap">
-      <canvas id="barChart"></canvas>
+  <!-- 본문 -->
+  <div class="main">
+    <div class="date-label">기준일 2024년 12월 31일</div>
+
+    <!-- KPI 카드 -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">연간 총 목표</div>
+        <div class="kpi-value" id="totalGoal">—</div>
+        <div class="kpi-sub">12개월 누적 목표 금액</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">연간 총 실적</div>
+        <div class="kpi-value orange" id="totalResult">—</div>
+        <div class="kpi-sub">12개월 누적 실적 금액</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">연간 달성률</div>
+        <div class="kpi-value orange" id="totalRate">—</div>
+        <div class="kpi-sub">총 실적 / 총 목표</div>
+      </div>
+    </div>
+
+    <!-- 막대 그래프 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">월별 목표 vs 실적 <small style="font-weight:400;color:#aaa;font-size:0.78rem;">(단위: 만원)</small></div>
+        <span class="section-badge" id="achieveBadge">—</span>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="barChart"></canvas>
+      </div>
+    </div>
+
+    <!-- 달성률 꺾은선 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">월별 달성률 추이</div>
+        <span class="section-badge">목표 100%</span>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="lineChart"></canvas>
+      </div>
+    </div>
+
+    <!-- 달성률 테이블 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">월별 달성률 상세</div>
+      </div>
+      <table class="rate-table">
+        <thead>
+          <tr>
+            <th style="width:60px">월</th>
+            <th style="width:90px">목표 (만원)</th>
+            <th style="width:90px">실적 (만원)</th>
+            <th>달성률</th>
+            <th style="width:60px;text-align:right">비고</th>
+          </tr>
+        </thead>
+        <tbody id="rateTableBody"></tbody>
+      </table>
     </div>
   </div>
 
-  <!-- 꺾은선 그래프 -->
-  <div class="panel">
-    <div class="panel-title">월별 달성률 추이 (%)</div>
-    <div class="chart-wrap">
-      <canvas id="lineChart"></canvas>
-    </div>
-  </div>
+  <div class="footer">ⓒ 2024 <span>영업팀</span> Sales Dashboard</div>
 
   <script>
     const data = {
@@ -175,36 +353,61 @@
     const totalResult = data.result.reduce((a, b) => a + b, 0);
     const totalRate   = ((totalResult / totalGoal) * 100).toFixed(1);
 
-    document.getElementById('totalGoal').innerHTML   = `${totalGoal.toLocaleString()} <span>만원</span>`;
-    document.getElementById('totalResult').innerHTML = `${totalResult.toLocaleString()} <span>만원</span>`;
-    document.getElementById('totalRate').innerHTML   = `${totalRate} <span>%</span>`;
+    document.getElementById('totalGoal').innerHTML   = `${(totalGoal/10000).toFixed(1)}억 <span>만원</span>`;
+    document.getElementById('totalResult').innerHTML = `${(totalResult/10000).toFixed(1)}억 <span>만원</span>`;
+    document.getElementById('totalRate').innerHTML   = `${totalRate}<span>%</span>`;
+    document.getElementById('achieveBadge').textContent = `목표 달성 ${rate.filter(r => r >= 100).length}개월`;
 
-    const gridColor   = '#2d3148';
-    const tickColor   = '#64748b';
-    const tooltipBg   = '#1e2130';
-    const tooltipBorder = '#3b82f6';
+    // 달성률 테이블
+    const tbody = document.getElementById('rateTableBody');
+    data.labels.forEach((label, i) => {
+      const r = rate[i];
+      const over = r >= 100;
+      tbody.innerHTML += `
+        <tr>
+          <td><strong>${label}</strong></td>
+          <td>${data.goal[i].toLocaleString()}</td>
+          <td style="color:${over ? '#f4501e' : '#1a1a1a'};font-weight:${over ? '700' : '400'}">${data.result[i].toLocaleString()}</td>
+          <td>
+            <div class="rate-bar-wrap">
+              <div class="rate-bar-bg">
+                <div class="rate-bar-fill ${over ? '' : 'under'}" style="width:${Math.min(r, 130)/1.3}%"></div>
+              </div>
+              <span class="rate-num ${over ? 'orange' : 'gray'}">${r}%</span>
+            </div>
+          </td>
+          <td style="text-align:right;font-size:0.72rem;color:${over ? '#f4501e' : '#bbb'}">${over ? '✓ 달성' : '미달'}</td>
+        </tr>`;
+    });
+
+    const ORANGE      = '#f4501e';
+    const ORANGE_SOFT = 'rgba(244,80,30,0.15)';
+    const GRAY_DARK   = '#333333';
+    const GRAY_LIGHT  = '#e0e0e0';
+    const TICK_COLOR  = '#999';
+    const GRID_COLOR  = '#f0f0f0';
 
     const commonScales = {
       x: {
-        ticks: { color: tickColor, font: { size: 12 } },
-        grid:  { color: gridColor },
-        border: { color: gridColor },
+        ticks: { color: TICK_COLOR, font: { size: 11 } },
+        grid:  { color: GRID_COLOR },
+        border:{ color: GRID_COLOR },
       },
       y: {
-        ticks: { color: tickColor, font: { size: 12 } },
-        grid:  { color: gridColor },
-        border: { color: gridColor },
+        ticks: { color: TICK_COLOR, font: { size: 11 } },
+        grid:  { color: GRID_COLOR },
+        border:{ color: GRID_COLOR },
       },
     };
-
     const commonTooltip = {
-      backgroundColor: tooltipBg,
-      borderColor: tooltipBorder,
+      backgroundColor: '#fff',
+      borderColor: '#e0e0e0',
       borderWidth: 1,
-      titleColor: '#f8fafc',
-      bodyColor: '#94a3b8',
+      titleColor: '#1a1a1a',
+      bodyColor: '#666',
       padding: 12,
-      cornerRadius: 8,
+      cornerRadius: 6,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
     };
 
     // 막대 그래프
@@ -216,19 +419,19 @@
           {
             label: '목표',
             data: data.goal,
-            backgroundColor: 'rgba(59,130,246,0.55)',
-            borderColor: '#3b82f6',
-            borderWidth: 1.5,
-            borderRadius: 5,
+            backgroundColor: '#e8e8e8',
+            borderColor: '#d0d0d0',
+            borderWidth: 1,
+            borderRadius: 4,
             borderSkipped: false,
           },
           {
             label: '실적',
             data: data.result,
-            backgroundColor: 'rgba(16,185,129,0.55)',
-            borderColor: '#10b981',
-            borderWidth: 1.5,
-            borderRadius: 5,
+            backgroundColor: ORANGE,
+            borderColor: ORANGE,
+            borderWidth: 0,
+            borderRadius: 4,
             borderSkipped: false,
           },
         ],
@@ -239,7 +442,7 @@
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            labels: { color: '#94a3b8', boxRadius: 4, font: { size: 12 } },
+            labels: { color: '#888', boxRadius: 3, font: { size: 11 }, padding: 20 },
           },
           tooltip: {
             ...commonTooltip,
@@ -254,7 +457,7 @@
             ...commonScales.y,
             ticks: {
               ...commonScales.y.ticks,
-              callback: v => v.toLocaleString(),
+              callback: v => (v / 10000).toFixed(1) + '억',
             },
           },
         },
@@ -270,21 +473,22 @@
           {
             label: '달성률',
             data: rate,
-            borderColor: '#f59e0b',
-            backgroundColor: 'rgba(245,158,11,0.12)',
-            pointBackgroundColor: rate.map(r => r >= 100 ? '#10b981' : '#f59e0b'),
-            pointBorderColor:     rate.map(r => r >= 100 ? '#10b981' : '#f59e0b'),
+            borderColor: ORANGE,
+            backgroundColor: ORANGE_SOFT,
+            pointBackgroundColor: rate.map(r => r >= 100 ? ORANGE : '#ccc'),
+            pointBorderColor:     rate.map(r => r >= 100 ? ORANGE : '#ccc'),
+            pointBorderWidth: 2,
             pointRadius: 5,
             pointHoverRadius: 7,
-            borderWidth: 2.5,
+            borderWidth: 2,
             fill: true,
             tension: 0.35,
           },
           {
-            label: '목표선 (100%)',
+            label: '목표 (100%)',
             data: Array(12).fill(100),
-            borderColor: '#475569',
-            borderDash: [6, 4],
+            borderColor: '#ddd',
+            borderDash: [5, 4],
             borderWidth: 1.5,
             pointRadius: 0,
             fill: false,
@@ -297,7 +501,7 @@
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            labels: { color: '#94a3b8', boxRadius: 4, font: { size: 12 } },
+            labels: { color: '#888', boxRadius: 3, font: { size: 11 }, padding: 20 },
           },
           tooltip: {
             ...commonTooltip,
